@@ -1,0 +1,96 @@
+package songTest;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.PageFactory;
+import utils.PlaylistPage;
+
+public class SongCommon  {
+	
+	public List<String> playlist;
+	
+	public SongCommon(WebDriver driver) {
+		super();
+		PageFactory.initElements(driver, this);
+	    playlist = new ArrayList<>();
+
+	}
+	
+    PlaylistPage playlistPage = new PlaylistPage();
+
+
+
+	public WebDriver driver;
+
+    By songListContainer = By.id("song-list");
+    By songItem = By.className("song-item");
+
+
+
+   public void playSongs(List<String> songs) {
+       for (String song : songs) {
+           WebElement songElement = driver.findElement(By.id(song));
+           songElement.click();
+       }
+   }
+
+   public List<String> getPlaylistOrder() {
+       List<WebElement> songElements = driver.findElement(songListContainer).findElements(songItem);
+       List<String> playlistOrder = new ArrayList<>();
+       for (WebElement songElement : songElements) {
+           playlistOrder.add(songElement.getAttribute("id"));
+       }
+       return playlistOrder;
+   }
+
+   public void assertPlaylistOrder(List<String> expectedOrder) {
+       List<String> actualOrder = getPlaylistOrder();
+       assert actualOrder.equals(expectedOrder) : "Expected order: " + expectedOrder + ", but got: " + actualOrder;
+   }
+
+
+
+public void playSongs() {
+    
+
+
+    // Play S1
+    playlistPage.playSong("S1");
+    playlistPage.waitForSongToLoad("S1");
+
+
+    // Play S2
+    playlistPage.playSong("S2");
+    playlistPage.waitForSongToLoad("S2");
+
+
+    // Play S3
+    playlistPage.playSong("S3");
+    playlistPage.waitForSongToLoad("S3");
+
+
+    // Play S4
+    playlistPage.playSong("S4");
+    playlistPage.waitForSongToLoad("S4");
+
+
+    // Play S2 again
+    playlistPage.playSong("S2");
+    playlistPage.waitForSongToLoad("S2");
+
+
+    // Play S1 again
+    playlistPage.playSong("S1");
+    playlistPage.waitForSongToLoad("S1");
+
+
+    // Print the final playlist
+    System.out.println("Final Playlist: " + playlist);
+}
+
+
+
+}

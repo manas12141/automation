@@ -1,0 +1,42 @@
+package songTest;
+
+import java.util.List;
+
+import org.testng.annotations.Test;
+
+import utils.HomePage;
+import utils.LoginPage;
+
+public class SongRunnerTest extends LoginPage {
+	
+	@Test
+	public void songTestRun() {
+		
+	    HomePage homePage = new HomePage(driver);
+	    SongCommon songs=new SongCommon(driver);
+	    Song testSong=new Song();
+	    
+	    
+	    homePage.openPlaylist();
+	    songs.playSongs();
+	      List<String> initialSongs = List.of("S1", "S2", "S3");
+	      testSong.playSongs(initialSongs);
+	      testSong.assertPlaylistOrder(initialSongs);
+
+	        // When S4 song is played
+	      testSong.playSongs(List.of("S4"));
+	      testSong.assertPlaylistOrder(List.of("S2", "S3", "S4"));
+
+	        // When S2 song is played
+	      testSong.playSongs(List.of("S2"));
+	      testSong.assertPlaylistOrder(List.of("S3", "S4", "S2"));
+
+	        // When S1 song is played
+	        automation.playSongs(List.of("S1"));
+	        automation.assertPlaylistOrder(List.of("S4", "S2", "S1"));
+	    
+
+		
+	}
+
+}

@@ -1,0 +1,61 @@
+package songTest;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+
+public class Song {
+	public WebDriver driver;
+
+     By songListContainer = By.id("song-list");
+     By songItem = By.className("song-item");
+
+
+
+    public void playSongs(List<String> songs) {
+        for (String song : songs) {
+            WebElement songElement = driver.findElement(By.id(song));
+            songElement.click();
+        }
+    }
+
+    public List<String> getPlaylistOrder() {
+        List<WebElement> songElements = driver.findElement(songListContainer).findElements(songItem);
+        List<String> playlistOrder = new ArrayList<>();
+        for (WebElement songElement : songElements) {
+            playlistOrder.add(songElement.getAttribute("id"));
+        }
+        return playlistOrder;
+    }
+
+    public void assertPlaylistOrder(List<String> expectedOrder) {
+        List<String> actualOrder = getPlaylistOrder();
+        assert actualOrder.equals(expectedOrder) : "Expected order: " + expectedOrder + ", but got: " + actualOrder;
+    }
+
+    public void quit() {
+        driver.quit();
+    }
+
+    public static void main(String[] args) {
+        PlaylistAutomation automation = new PlaylistAutomation();
+        List<String> initialSongs = List.of("S1", "S2", "S3");
+        automation.playSongs(initialSongs);
+        automation.assertPlaylistOrder(initialSongs);
+
+        // When S4 song is played
+        automation.playSongs(List.of("S4"));
+        automation.assertPlaylistOrder(List.of("S2", "S3", "S4"));
+
+        // When S2 song is played
+        automation.playSongs(List.of("S2"));
+        automation.assertPlaylistOrder(List.of("S3", "S4", "S2"));
+
+        // When S1 song is played
+        automation.playSongs(List.of("S1"));
+        automation.assertPlaylistOrder(List.of("S4", "S2", "S1"));
+
+        automation.quit();
+    }
+}
+
+}

@@ -1,66 +1,31 @@
 package utils;
 
-import java.io.File;
 import java.util.concurrent.TimeUnit;
-import org.apache.commons.io.FileUtils;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.testng.ITestResult;
 import org.testng.annotations.AfterClass;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeClass;
+
 
 public class LoginPage {
 
 	public WebDriver driver;
 
-@BeforeMethod
+@BeforeClass
 public void lunchBrowser() {
 	driver=new ChromeDriver();
 	driver.manage().window().maximize();
-	driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 	driver.get("https://example.com");
+	
+	driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+	
+	driver.findElement(By.id("username")).sendKeys(Contsant.username);
+	driver.findElement(By.id("password")).sendKeys(Contsant.password);
+	driver.findElement(By.id("login-btn")).click();
 }
 
-@AfterMethod
-public void LogOut(ITestResult result) {
-	if(ITestResult.FAILURE==result.getStatus()){
-		try{
-			// To create reference of TakesScreenshot
-			TakesScreenshot screenshot=(TakesScreenshot)driver;
-			// Call method to capture screenshot
-			File src=screenshot.getScreenshotAs(OutputType.FILE);
-			// Copy files to specific location 
-			// result.getName() will return name of test case so that screenshot name will be same as test case name
-			FileUtils.copyFile(src, new File(System.getProperty("user.dir")+ "\\ScreenShots\\"+result.getName()+".png"));
-			System.out.println("Successfully captured a screenshot");
-		}
-		catch (Exception e){
-			System.out.println("Exception while taking screenshot "+e.getMessage());
-			
-			try {
-				driver.quit();
-			} 
-			catch (Exception ex) {
-			}
-		} 
-	}
-	
-	try {
-		LogoutPage logoutSetup = new LogoutPage();
-		logoutSetup.LogoutExcute();
-		driver.quit();
-	}
-	catch (Exception e) {
-		try {
-			driver.quit();
-		} 
-		catch (Exception ex) {
-		}
-	}
-}
+
 
 @AfterClass
 public void Quit() {
@@ -70,5 +35,6 @@ public void Quit() {
 	catch (Exception e) {
 	}
 }
+
 
 }

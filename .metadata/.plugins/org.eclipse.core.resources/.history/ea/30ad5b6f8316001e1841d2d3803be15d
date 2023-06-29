@@ -1,0 +1,26 @@
+package utils;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+
+public class PlaylistPage {
+	 public WebDriver driver;
+
+
+
+
+	    public void playSong(String song) {
+	        // Logic to play the song on the playlist page
+	        for (String song : songs) {
+	            WebElement songElement = driver.findElement(By.id(song));
+	            songElement.click();
+	        }
+	    }
+
+
+	    public void waitForSongToLoad(String song) {
+	        // Logic to wait for the song to load on the playlist page
+	    }
+
+}
